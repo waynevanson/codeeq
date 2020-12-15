@@ -1,22 +1,38 @@
-import { highlightBlock } from "highlight.js"
+import { highlight } from "highlight.js"
 import * as React from "react"
+import * as dom from "../domain"
+import * as lib from "../lib"
 
-export const CodeBlock: React.FC<{
-  code: string
-  className?: string
-  style?: React.CSSProperties
-}> = ({ code }) => {
-  const ref = React.useRef<HTMLPreElement>(null)
+/**
+ * @summary
+ * Displays a block of code that's been formatted based on language.
+ * @param
+ */
+export const CodeBlock: React.FC<lib.HTMLProps & dom.CodeBlock> = ({
+  code,
+  language,
+  style,
+  className = "",
+}) => {
+  const ref = React.useRef<HTMLElement>(null)
 
-  // takes 352 seconds...
   React.useEffect(() => {
-    if (!ref.current) return
-    highlightBlock(ref.current)
+    // feels like async speeds up load,
+    // does it take it out of react?
+    new Promise((res, rej) => {
+      if (!ref.current) return
+      const result = highlight(language, code)
+      ref.current.innerHTML = new DOMParser().parseFromString(
+        result.value,
+        "text/html"
+      ).body.innerHTML
+      res()
+    })
   }, [code])
 
   return (
-    <pre ref={ref}>
-      <code>{code}</code>
+    <pre className={className + ` hljs ${language}` + ""} style={style}>
+      <code ref={ref}>{code}</code>
     </pre>
   )
 }

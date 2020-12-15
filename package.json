@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "parcel serve ./public/index.html"
+    "start": "parcel serve ./public/index.html",
+    "build": "PARCEL_BUNDLE_ANALYZER=1 parcel build ./public/index.html"
   },
   "devDependencies": {
     "@types/jest": "^26.0.19",
@@ -28,5 +29,10 @@
     "preact": "^10.5.7",
     "react-router-dom": "^5.2.0",
     "tailwindcss": "^2.0.2"
+  },
+  "alias": {
+    "react": "preact/compat",
+    "react-dom/test-utils": "preact/test-utils",
+    "react-dom": "preact/compat"
   }
 }
