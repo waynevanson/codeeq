@@ -4,13 +4,16 @@
     "build": "PARCEL_BUNDLE_ANALYZER=1  parcel build ./public/index.html"
   },
   "devDependencies": {
+    "@octokit/core": "^3.2.4",
     "@types/jest": "^26.0.19",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "@types/react-router": "^5.1.8",
+    "@types/react-router-dom": "^5.1.6",
     "autoprefixer": "^10.1.0",
     "jest": "^26.6.3",
-    "netlify-cli": "^2.69.8",
-    "parcel": "^2.0.0-nightly.477",
+    "netlify-cli": "^2.69.9",
+    "parcel": "^2.0.0-nightly.481",
     "postcss": "^8.2.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -21,12 +24,14 @@
   "dependencies": {
     "@material-ui/core": "^4.11.2",
     "@material-ui/icons": "^4.11.2",
+    "clsx": "^1.1.1",
     "faunadb": "^4.0.0",
     "fontsource-roboto": "^3.1.5",
     "fp-ts": "^2.9.1",
     "highlight.js": "^10.4.1",
     "monocle-ts": "^2.3.3",
     "preact": "^10.5.7",
+    "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "tailwindcss": "^2.0.2"
   },

@@ -1,8 +1,10 @@
 import * as React from "react"
 import * as lib from "../lib"
 import * as dom from "../domain"
+import { Grid } from "@material-ui/core"
 
-// how to display pattern and the code?
+// one pattern of code.
+// ensure it'
 export const Pattern: React.FC<lib.HTMLProps & dom.Pattern> = ({
   code,
   details,
@@ -11,5 +13,5 @@ export const Pattern: React.FC<lib.HTMLProps & dom.Pattern> = ({
   className,
   style,
 }) => {
-  return null
+  return <Grid className={className} style={style}></Grid>
 }

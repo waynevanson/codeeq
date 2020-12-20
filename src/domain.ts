@@ -20,7 +20,7 @@ export interface CodeBlock {
   language: Language
 }
 
-// sort by language
+// sort by language, with the selected at the front
 export interface Pattern extends CodeBlock {
   name: string
   details: string

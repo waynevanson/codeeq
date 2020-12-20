@@ -1,32 +1,51 @@
 import { Card, Tab, Tabs, Typography } from "@material-ui/core"
-import { array as A, io as IO, option as O } from "fp-ts"
+import { array as A, option as O } from "fp-ts"
 import { pipe } from "fp-ts/lib/function"
 import * as React from "react"
 import * as dom from "../domain"
 import * as lib from "../lib"
 import { CodeBlock } from "./code-block"
 
+const findTabIndex = (languageSelected: dom.Language) => (
+  patterns: Array<dom.Pattern>
+) =>
+  pipe(
+    patterns,
+    A.findIndex((a) => a.language === languageSelected)
+  )
+
 export const Statement: React.FC<
-  lib.HTMLProps & dom.Statement & { language: lib.UseState<dom.Language> }
+  lib.HTMLProps &
+    dom.Statement & {
+      languages: lib.UseState<Array<dom.Language>>
+      languageSelected: lib.UseState<dom.Language>
+    }
 > = ({
   patterns,
   style,
   className,
   description,
   name,
-  language: [language, languageSelectedSet],
+  languageSelected: [languageSelected, languageSelectedSet],
+  languages: [languages, languagesSet],
 }) => {
-  const [tabIndex, tabIndexSet] = React.useState(-1)
+  const [tabIndex, tabIndexSet] = React.useState(() =>
+    pipe(
+      patterns,
+      findTabIndex(languageSelected),
+      O.getOrElse(() => -1)
+    )
+  )
 
   // change the tab index when the language changes
   React.useEffect(() => {
     pipe(
       patterns,
-      A.findIndex((a) => a.language === language),
+      findTabIndex(languageSelected),
       O.map((index) => () => tabIndexSet(() => index)),
       O.getOrElse(() => () => console.log("could not find index in the list"))
     )()
-  }, [patterns, language])
+  }, [patterns, languageSelected])
 
   function handleTabChange(e: any, newIndex: number) {
     tabIndexSet(() => newIndex)
