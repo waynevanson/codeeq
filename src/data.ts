@@ -28,14 +28,12 @@ export const statements: Array<D.Statement> = [
         details: "",
       },
       {
-        language: "javascript",
-        code: `for (let i=0; i<100; i++) {
-  console.log(i)
-}`,
-
+        language: "typescript",
+        code: `[1, 2, 3, 4, 5].forEach((element) => console.log(element))`,
         name: "",
         details: "",
       },
+
       {
         language: "haskell",
         code: `a = map [1,2,3,4,5] /s -> log s`,

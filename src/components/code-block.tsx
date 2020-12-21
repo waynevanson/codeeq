@@ -6,7 +6,7 @@ import * as lib from "../lib"
 /**
  * @summary
  * Displays a block of code that's been formatted based on language.
- * @param
+ * @todo use prismjs instead of highlihgtjs, as it's overhead is huge.
  */
 export const CodeBlock: React.FC<lib.HTMLProps & dom.CodeBlock> = ({
   code,
@@ -19,7 +19,7 @@ export const CodeBlock: React.FC<lib.HTMLProps & dom.CodeBlock> = ({
   React.useEffect(() => {
     // feels like async speeds up load,
     // does it take it out of react?
-    new Promise((res, rej) => {
+    new Promise<void>((res, rej) => {
       if (!ref.current) return
       const result = highlight(language, code)
       ref.current.innerHTML = new DOMParser().parseFromString(
@@ -32,7 +32,7 @@ export const CodeBlock: React.FC<lib.HTMLProps & dom.CodeBlock> = ({
 
   return (
     <pre className={className + ` hljs ${language}` + ""} style={style}>
-      <code ref={ref}>{code}</code>
+      <code ref={ref}></code>
     </pre>
   )
 }

@@ -1,6 +1,6 @@
 import { Card, Tab, Tabs, Typography } from "@material-ui/core"
-import { array as A, option as O } from "fp-ts"
-import { pipe } from "fp-ts/lib/function"
+import { array as A, io, option as O } from "fp-ts"
+import { constVoid, pipe } from "fp-ts/lib/function"
 import * as React from "react"
 import * as dom from "../domain"
 import * as lib from "../lib"
@@ -29,26 +29,23 @@ export const Statement: React.FC<
   languageSelected: [languageSelected, languageSelectedSet],
   languages: [languages, languagesSet],
 }) => {
-  const [tabIndex, tabIndexSet] = React.useState(() =>
-    pipe(
-      patterns,
-      findTabIndex(languageSelected),
-      O.getOrElse(() => -1)
-    )
+  const [oTabIndex, oTabIndexSet] = React.useState<O.Option<number>>(() =>
+    pipe(patterns, findTabIndex(languageSelected))
   )
 
-  // change the tab index when the language changes
+  // change ther tab index when the language changes
   React.useEffect(() => {
     pipe(
       patterns,
       findTabIndex(languageSelected),
-      O.map((index) => () => tabIndexSet(() => index)),
-      O.getOrElse(() => () => console.log("could not find index in the list"))
+      io.of,
+      io.chainFirst((oindex) => () => oTabIndexSet(() => oindex))
     )()
   }, [patterns, languageSelected])
 
-  function handleTabChange(e: any, newIndex: number) {
-    tabIndexSet(() => newIndex)
+  // todo - use Option structure
+  function handleTabChange(newIndex: number) {
+    oTabIndexSet(() => O.some(newIndex))
     pipe(
       patterns,
       A.lookup(newIndex),
@@ -61,21 +58,32 @@ export const Statement: React.FC<
 
   return (
     <Card style={style} className={className}>
-      <Typography variant="h4">{name}</Typography>
-      <Typography variant="body1">{description}</Typography>
+      <div className="px-2">
+        <Typography variant="h4">{name}</Typography>
+        <Typography variant="body1">{description}</Typography>
+      </div>
       {/* Selects the language */}
-      <Tabs
-        value={tabIndex}
-        indicatorColor="primary"
-        textColor="primary"
-        onChange={handleTabChange}
-        aria-label="language buttons"
-      >
-        {pipe(
-          patterns,
-          A.map(({ language }) => <Tab key={language} label={language} />)
-        )}
-      </Tabs>
+      {/* todo - convert to Record<dom.Language, dom.Pattern> */}
+      {/* We currently have dupicate language tabs */}
+      {pipe(
+        oTabIndex,
+        O.map((tabIndex) => (
+          <Tabs
+            value={tabIndex}
+            indicatorColor="primary"
+            textColor="primary"
+            onChange={(e, index) => handleTabChange(index)}
+            aria-label="language buttons"
+          >
+            {pipe(
+              patterns,
+              A.map(({ language }) => <Tab key={language} label={language} />)
+            )}
+          </Tabs>
+        )),
+        O.getOrElseW(() => "Not Available")
+      )}
+      {/* todo - convert to Record<dom.Language, dom.Pattern> */}
       {pipe(
         patterns,
         A.mapWithIndex((index, props) => (
@@ -83,14 +91,14 @@ export const Statement: React.FC<
             className="rounded-b-md"
             key={props.language}
             /* only display code block if selected */
-            style={
-              index !== tabIndex
-                ? {
-                    visibility: "hidden",
-                    position: "absolute",
-                  }
-                : {}
-            }
+            style={pipe(
+              oTabIndex,
+              O.chain(O.fromPredicate((tabIndex) => index === tabIndex)),
+              O.fold(
+                () => ({ visibility: "hidden", position: "absolute" }),
+                () => ({})
+              )
+            )}
             {...props}
           />
         ))

@@ -28,14 +28,18 @@ const Pattern: React.FC<lib.HTMLProps & dom.Pattern> = ({
 export const Statements: React.FC<{
   languages: lib.UseState<Array<dom.Language>>
   languageSelected: lib.UseState<dom.Language>
-}> = ({ languages, languageSelected }) => {
+}> = (props) => {
   lib.useTitle("Statements")
 
   return (
-    <Grid container>
+    <Grid spacing={2} container>
       {pipe(
         data.statements,
-        A.map((props) => Statement({ ...props, languages, languageSelected }))
+        A.map((statement) => (
+          <Grid item>
+            <Statement {...statement} {...props} />
+          </Grid>
+        ))
       )}
     </Grid>
   )
