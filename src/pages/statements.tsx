@@ -3,7 +3,7 @@ import { array as A, option as O, readonlyRecord as RC } from "fp-ts"
 import { pipe } from "fp-ts/lib/function"
 import * as React from "react"
 import { LanguageSwitches } from "../components/language-switches"
-import { Statement } from "../components/statement"
+import { StatementMini } from "../components/statement-mini"
 import * as data from "../data"
 import * as lib from "../lib"
 
@@ -32,7 +32,7 @@ export const Statements: React.FC<StatementsProps> = (props) => {
           data.statements,
           A.map((statement) => (
             <Grid item>
-              <Statement {...statement} {...props} />
+              <StatementMini {...statement} {...props} />
             </Grid>
           ))
         )}

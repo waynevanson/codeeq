@@ -2,18 +2,18 @@ import { Card, Typography } from "@material-ui/core"
 import { array as A, eq, option as O, ord, record as RC } from "fp-ts"
 import { pipe } from "fp-ts/lib/function"
 import * as React from "react"
-import * as domain from "../domain/"
+import * as domain from "../domain"
 import * as lib from "../lib"
 import { LanguageSelector } from "./language-selector"
 import { PatternsMini } from "./patterns-mini"
 
 // todo - rename props
-export interface StatementProps extends lib.HTMLProps, domain.Statement {
+export interface StatementMiniProps extends lib.HTMLProps, domain.Statement {
   languagesChosen: lib.UseState<O.Option<Array<string>>>
   languageSelected: lib.UseState<string>
 }
 
-export const Statement: React.FC<StatementProps> = ({
+export const StatementMini: React.FC<StatementMiniProps> = ({
   patterns,
   style,
   className,
