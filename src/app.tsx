@@ -1,14 +1,13 @@
 import { console as C, either, io as IO, option as O } from "fp-ts"
 import * as ls from "fp-ts-local-storage"
-import { flow, pipe } from "fp-ts/lib/function"
+import { pipe } from "fp-ts/lib/function"
+import * as t from "io-ts"
 import * as React from "react"
 import { BrowserRouter, Route, Switch } from "react-router-dom"
 import { PageTemplate } from "./components/page-template"
-import * as data from "./data"
 import { Home } from "./pages/home"
 import { Statement } from "./pages/statement"
 import { Statements } from "./pages/statements"
-import * as t from "io-ts"
 
 export const localStorageGetOrElse = (key: string, defaultValue: string) =>
   pipe(

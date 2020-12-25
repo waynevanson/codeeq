@@ -31,20 +31,20 @@ export const statements: Array<domain.Statement> = [
         code: `for (let i=0; i<100; i++) {
   console.log(i)
 }`,
-        name: "",
+        name: "pattern 1 name ts",
         details: "",
       },
       {
         language: "typescript",
         code: `[1, 2, 3, 4, 5].forEach((element) => console.log(element))`,
-        name: "",
+        name: "pattern 2 name ts",
         details: "",
       },
 
       {
         language: "haskell",
         code: `a = map [1,2,3,4,5] /s -> log s`,
-        name: "",
+        name: "pattern 1 name haskell",
         details: "",
       },
     ],
