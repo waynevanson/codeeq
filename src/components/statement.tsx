@@ -1,66 +1,11 @@
-import { Card, Grid, Typography } from "@material-ui/core"
+import { Card, Typography } from "@material-ui/core"
 import { array as A, eq, option as O, ord, record as RC } from "fp-ts"
 import { pipe } from "fp-ts/lib/function"
 import * as React from "react"
 import * as domain from "../domain/"
 import * as lib from "../lib"
-import { CodeBlock } from "./code-block"
 import { LanguageSelector } from "./language-selector"
-
-export interface PatternsMiniProps {
-  patternsByLanguage: Record<string, Array<domain.Pattern>>
-  languageSelected: string
-}
-
-export interface PatternMiniProps extends domain.Pattern {
-  languageSelected: string
-}
-
-export const PatternMini: React.FC<PatternMiniProps> = ({
-  code,
-  language,
-  languageSelected,
-}) => (
-  <Grid item>
-    <CodeBlock
-      className="rounded-b-md "
-      key={language + code}
-      /* only display code block if selected */
-      style={pipe(
-        language,
-        O.fromPredicate((language) => language !== languageSelected),
-        O.map(
-          (): React.CSSProperties => ({
-            visibility: "hidden",
-            position: "absolute",
-          })
-        ),
-        O.getOrElseW(() => ({ marginTop: "1rem" }))
-      )}
-      code={code}
-      language={language}
-    />
-  </Grid>
-)
-
-export const PatternsMini: React.FC<PatternsMiniProps> = ({
-  patternsByLanguage,
-  languageSelected,
-}) => (
-  <Grid container>
-    {pipe(
-      patternsByLanguage,
-      RC.collect((_, patterns) =>
-        pipe(
-          patterns,
-          A.map((pattern) => (
-            <PatternMini languageSelected={languageSelected} {...pattern} />
-          ))
-        )
-      )
-    )}
-  </Grid>
-)
+import { PatternsMini } from "./patterns-mini"
 
 // todo - rename props
 export interface StatementProps extends lib.HTMLProps, domain.Statement {
@@ -74,7 +19,6 @@ export const Statement: React.FC<StatementProps> = ({
   className,
   description,
   name,
-
   languageSelected,
   // languagesChosen: [languages, languagesSet],
 }) => {
