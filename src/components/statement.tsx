@@ -1,13 +1,13 @@
 import { Card, Tab, Tabs, Typography } from "@material-ui/core"
 import { array as A, io, option as O } from "fp-ts"
-import { constVoid, pipe } from "fp-ts/lib/function"
+import { pipe } from "fp-ts/lib/function"
 import * as React from "react"
-import * as dom from "../domain"
+import * as domain from "../domain/"
 import * as lib from "../lib"
 import { CodeBlock } from "./code-block"
 
-const findTabIndex = (languageSelected: dom.Language) => (
-  patterns: Array<dom.Pattern>
+const findTabIndex = (languageSelected: string) => (
+  patterns: Array<domain.Pattern>
 ) =>
   pipe(
     patterns,
@@ -16,9 +16,9 @@ const findTabIndex = (languageSelected: dom.Language) => (
 
 export const Statement: React.FC<
   lib.HTMLProps &
-    dom.Statement & {
-      languages: lib.UseState<Array<dom.Language>>
-      languageSelected: lib.UseState<dom.Language>
+    domain.Statement & {
+      languagesChosen: lib.UseState<O.Option<Array<string>>>
+      languageSelected: lib.UseState<string>
     }
 > = ({
   patterns,
@@ -27,7 +27,7 @@ export const Statement: React.FC<
   description,
   name,
   languageSelected: [languageSelected, languageSelectedSet],
-  languages: [languages, languagesSet],
+  languagesChosen: [languages, languagesSet],
 }) => {
   const [oTabIndex, oTabIndexSet] = React.useState<O.Option<number>>(() =>
     pipe(patterns, findTabIndex(languageSelected))
@@ -63,7 +63,7 @@ export const Statement: React.FC<
         <Typography variant="body1">{description}</Typography>
       </div>
       {/* Selects the language */}
-      {/* todo - convert to Record<dom.Language, dom.Pattern> */}
+      {/* todo - convert to Record<string, dom.Pattern> */}
       {/* We currently have dupicate language tabs */}
       {pipe(
         oTabIndex,
@@ -83,7 +83,7 @@ export const Statement: React.FC<
         )),
         O.getOrElseW(() => "Not Available")
       )}
-      {/* todo - convert to Record<dom.Language, dom.Pattern> */}
+      {/* todo - convert to Record<string, dom.Pattern> */}
       {pipe(
         patterns,
         A.mapWithIndex((index, props) => (

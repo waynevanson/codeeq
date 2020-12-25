@@ -1,46 +1,42 @@
-// a summary of many statements. highlights a few in desired languages
-//
-// select from language/s
-//
-//
-import * as React from "react"
-import * as lib from "../lib"
-import * as dom from "../domain"
 import { Grid } from "@material-ui/core"
-import * as data from "../data"
+import { array as A, option as O, readonlyRecord as RC } from "fp-ts"
 import { pipe } from "fp-ts/lib/function"
-import { array as A } from "fp-ts"
+import * as React from "react"
+import { LanguageSwitches } from "../components/language-switches"
 import { Statement } from "../components/statement"
+import * as data from "../data"
+import * as lib from "../lib"
 
-// one pattern of code.
-// ensure it'
-const Pattern: React.FC<lib.HTMLProps & dom.Pattern> = ({
-  code,
-  details,
-  language,
-  name,
-  className,
-  style,
-}) => {
-  return <Grid className={className} style={style}></Grid>
+export const availableLanguagesRecord = pipe(
+  data.languages,
+  A.reduce(RC.empty as RC.ReadonlyRecord<string, boolean>, (b, a) =>
+    pipe(b, RC.insertAt(a, false))
+  )
+)
+
+export interface StatementsProps {
+  languagesChosen: lib.UseState<O.Option<Array<string>>>
+  languageSelected: lib.UseState<string>
 }
 
-export const Statements: React.FC<{
-  languages: lib.UseState<Array<dom.Language>>
-  languageSelected: lib.UseState<dom.Language>
-}> = (props) => {
+export const Statements: React.FC<StatementsProps> = (props) => {
   lib.useTitle("Statements")
 
+  const stateCheckboxes = React.useState(() => availableLanguagesRecord)
+
   return (
-    <Grid spacing={2} container>
-      {pipe(
-        data.statements,
-        A.map((statement) => (
-          <Grid item>
-            <Statement {...statement} {...props} />
-          </Grid>
-        ))
-      )}
-    </Grid>
+    <>
+      <LanguageSwitches stateCheckboxes={stateCheckboxes} />
+      <Grid spacing={2} container>
+        {pipe(
+          data.statements,
+          A.map((statement) => (
+            <Grid item>
+              <Statement {...statement} {...props} />
+            </Grid>
+          ))
+        )}
+      </Grid>
+    </>
   )
 }

@@ -1,4 +1,11 @@
-import { option as O, readonlyRecord as R } from "fp-ts"
+/**
+ * Think of this file as state that never changes.
+ * A read only database.
+ *
+ * There are also other preran functions
+ */
+
+import { array, eq, option as O, readonlyRecord as R } from "fp-ts"
 import { pipe } from "fp-ts/lib/function"
 import * as D from "./domain"
 
@@ -82,3 +89,10 @@ export const statements: Array<D.Statement> = [
     ],
   },
 ]
+
+export const languages = pipe(
+  statements,
+  array.chain((a) => a.patterns),
+  array.map((a) => a.language),
+  array.uniq(eq.eqString)
+)

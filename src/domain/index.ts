@@ -1,7 +1,5 @@
 import { option } from "fp-ts"
 
-export type Language = "javascript" | "typescript" | "haskell"
-
 export interface Links
   extends Record<"wikipedia" | "mdn", option.Option<string>> {}
 
@@ -17,7 +15,7 @@ export interface Statement {
 
 export interface CodeBlock {
   code: string
-  language: Language
+  language: string
 }
 
 // sort by language, with the selected at the front

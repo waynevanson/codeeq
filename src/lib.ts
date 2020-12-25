@@ -31,3 +31,11 @@ export function useTitle(initialValue?: string) {
 
   return [title, externalTitleSet] as const
 }
+
+export function capitalize(s: string) {
+  return s.slice(0, 1).toUpperCase() + s.slice(1)
+}
+
+export function lowercase(s: string) {
+  return s.toLowerCase()
+}
