@@ -1,9 +1,7 @@
-import { console as C, either, io as IO, option as O } from "fp-ts"
-import * as ls from "fp-ts-local-storage"
-import { Endomorphism, flow, Lazy, pipe } from "fp-ts/lib/function"
+import { either, io as IO } from "fp-ts"
+import { Endomorphism, Lazy, pipe } from "fp-ts/lib/function"
 import * as d from "io-ts/Decoder"
 import * as React from "react"
-import * as lib from "./lib"
 
 export type HTMLProps = {
   className?: string
@@ -63,30 +61,26 @@ export function useFunctionalState<A>(lazy: Lazy<A>): UseFunctionalState<A> {
 
 export function useStateLocalStorage<A>(
   key: string,
-  defaultValue: A,
+  defaultValue: Lazy<A>,
   decoder: d.Decoder<string, A>
-) {
-  return lib.useFunctionalState(
-    pipe(
-      ls.getItem(key),
-      IO.map(O.chain(flow(decoder.decode, O.fromEither))),
-      IO.chain(
-        flow(
-          O.fold(
-            () =>
-              pipe(
-                either.stringifyJSON(defaultValue, (e) => e),
-                either.fold(
-                  () => C.error(`failed to stringify "${defaultValue}"`),
-                  (defaultValueString) =>
-                    pipe(ls.setItem(key, defaultValueString))
-                ),
-                IO.map(() => defaultValue)
-              ),
-            IO.of
-          )
-        )
-      )
-    )
-  )
+): UseFunctionalState<A> {
+  const [value, setValue] = useFunctionalState(defaultValue)
+
+  React.useEffect(() => {
+    const stickyValue = window.localStorage.getItem(key)
+
+    if (stickyValue !== null) {
+      pipe(
+        JSON.parse(stickyValue),
+        decoder.decode,
+        either.traverse(IO.Applicative)((a) => setValue(() => a))
+      )()
+    }
+  }, [key])
+
+  React.useEffect(() => {
+    window.localStorage.setItem(key, JSON.stringify(value))
+  }, [key, value])
+
+  return [value, setValue]
 }

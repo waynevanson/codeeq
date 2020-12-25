@@ -21,7 +21,11 @@ export const PatternsMini: React.FC<PatternsMiniProps> = ({
         pipe(
           patterns,
           A.map((pattern) => (
-            <PatternMini languageSelected={languageSelected} {...pattern} />
+            <PatternMini
+              key={pattern.code + pattern.name}
+              languageSelected={languageSelected}
+              {...pattern}
+            />
           ))
         )
       )

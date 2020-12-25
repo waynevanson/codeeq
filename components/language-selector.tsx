@@ -18,11 +18,12 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
       value={pipe(
         languages,
         A.findFirst((l: string) => l === languageSelected),
+
         O.getOrElseW(() => false)
       )}
       indicatorColor="primary"
       textColor="primary"
-      onChange={(e, newLanguageSelected) =>
+      onChange={(_, newLanguageSelected) =>
         languageSelectedSet(() => newLanguageSelected)()
       }
       aria-label="language buttons"

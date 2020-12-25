@@ -1,11 +1,13 @@
 import { Grid } from "@material-ui/core"
 import { array as A, readonlyRecord as RC } from "fp-ts"
 import { pipe } from "fp-ts/lib/function"
+import { NextPageContext } from "next"
 import * as React from "react"
 import { LanguageSwitches } from "../components/language-switches"
 import { StatementMini } from "../components/statement-mini"
 import * as data from "../data"
 import * as lib from "../lib"
+import * as d from "io-ts/Decoder"
 
 export const availableLanguagesRecord = pipe(
   data.languages,
@@ -14,13 +16,22 @@ export const availableLanguagesRecord = pipe(
   )
 )
 
-export interface StatementsProps {
-  stateLanguagesChosen: lib.UseFunctionalState<Array<string>>
-  stateLanguageSelected: lib.UseFunctionalState<string>
-}
+export interface StatementsProps extends NextPageContext {}
 
-export const Statements: React.FC<StatementsProps> = (props) => {
+export const Statements: React.FC<StatementsProps> = () => {
   lib.useTitle("Statements")
+
+  const stateLanguageSelected = lib.useStateLocalStorage(
+    "languageSelected",
+    () => "javascript",
+    d.string
+  )
+
+  const stateLanguagesChosen = lib.useStateLocalStorage(
+    "languagesChosen",
+    () => ["javascript"],
+    d.array(d.string)
+  )
 
   const stateCheckboxes = lib.useFunctionalState(() => availableLanguagesRecord)
 
@@ -31,8 +42,14 @@ export const Statements: React.FC<StatementsProps> = (props) => {
         {pipe(
           data.statements,
           A.map((statement) => (
-            <Grid item>
-              <StatementMini {...statement} {...props} />
+            <Grid key={statement.name} item>
+              <StatementMini
+                {...{
+                  stateLanguageSelected,
+                  stateLanguagesChosen,
+                  ...statement,
+                }}
+              />
             </Grid>
           ))
         )}
@@ -40,3 +57,5 @@ export const Statements: React.FC<StatementsProps> = (props) => {
     </>
   )
 }
+
+export default Statements

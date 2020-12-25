@@ -14,7 +14,7 @@ import { useStyles } from "./use-styles"
 import * as lib from "../../lib"
 import { pipe } from "fp-ts/lib/function"
 import { array } from "fp-ts"
-import { NavLink } from "react-router-dom"
+import Link from "next/link"
 
 export interface NavLinkProps {
   text: string
@@ -24,14 +24,14 @@ export interface NavLinkProps {
 
 export const NavLinkStyled: React.FC<NavLinkProps> = ({ text, Icon, href }) => {
   return (
-    <NavLink to={href}>
+    <Link href={href}>
       <ListItem button key={text}>
         <ListItemIcon>
           <Icon />
         </ListItemIcon>
         <ListItemText primary={text} />
       </ListItem>
-    </NavLink>
+    </Link>
   )
 }
 
@@ -63,7 +63,7 @@ export const NavDrawer: React.FC<{ stateOpen: lib.UseState<boolean> }> = ({
             { href: "/", text: "Home", Icon: Mail },
             { href: "/statements", text: "Statements", Icon: Mail },
           ] as Array<NavLinkProps>,
-          array.map(NavLinkStyled)
+          array.map((a) => <NavLinkStyled key={a.text} {...a} />)
         )}
       </List>
     </Drawer>

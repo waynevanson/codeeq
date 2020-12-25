@@ -19,7 +19,7 @@ export const CodeBlock: React.FC<lib.HTMLProps & dom.CodeBlock> = ({
   React.useEffect(() => {
     // feels like async speeds up load,
     // does it take it out of react?
-    new Promise<void>((res, rej) => {
+    new Promise<void>((res) => {
       if (!ref.current) return
       const result = highlight(language, code)
       ref.current.innerHTML = new DOMParser().parseFromString(
