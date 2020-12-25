@@ -10,21 +10,6 @@ import { Home } from "./pages/home"
 import { Statement } from "./pages/statement"
 import { Statements } from "./pages/statements"
 
-export const localStorageGetOrElse = (key: string, defaultValue: string) =>
-  pipe(
-    ls.getItem(key),
-    IO.chain(
-      O.fold(
-        () =>
-          pipe(
-            ls.setItem(key, defaultValue),
-            IO.map(() => defaultValue)
-          ),
-        IO.of
-      )
-    )
-  )
-
 export function useStateLocalStorage<A>(
   key: string,
   defaultValue: A,
