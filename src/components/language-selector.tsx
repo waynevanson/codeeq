@@ -1,5 +1,5 @@
 import { Tab, Tabs } from "@material-ui/core"
-import { array as A, io, option as O } from "fp-ts"
+import { array as A, option as O } from "fp-ts"
 import { pipe } from "fp-ts/lib/function"
 import * as React from "react"
 import * as lib from "../lib"
@@ -15,7 +15,11 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
 }) => {
   return (
     <Tabs
-      value={languageSelected}
+      value={pipe(
+        languages,
+        A.findFirst((l: string) => l === languageSelected),
+        O.getOrElseW(() => false)
+      )}
       indicatorColor="primary"
       textColor="primary"
       onChange={(e, newLanguageSelected) =>
