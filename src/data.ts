@@ -5,14 +5,14 @@
  * There are also other preran functions
  */
 
-import { array, eq, option as O, readonlyRecord as R } from "fp-ts"
+import { array as A, eq, option as O, readonlyRecord as R, record } from "fp-ts"
 import { pipe } from "fp-ts/lib/function"
-import * as D from "./domain"
+import * as domain from "./domain"
 
 // select languages, with an order.
 // state at top and simply set first,
 // then advance with an order, with buttons to move them.
-export const statements: Array<D.Statement> = [
+export const statements: Array<domain.Statement> = [
   {
     name: "for loop",
     description:
@@ -82,7 +82,7 @@ export const statements: Array<D.Statement> = [
       },
       {
         language: "haskell",
-        code: `a = map [1,2,3,4,5] /s -> log s`,
+        code: `a = map [1,2,3,4,5] (/s -> log s)`,
         name: "",
         details: "",
       },
@@ -92,7 +92,15 @@ export const statements: Array<D.Statement> = [
 
 export const languages = pipe(
   statements,
-  array.chain((a) => a.patterns),
-  array.map((a) => a.language),
-  array.uniq(eq.eqString)
+  A.chain((a) => a.patterns),
+  A.map((a) => a.language),
+  A.uniq(eq.eqString)
+)
+
+export const patternsByLanguage = pipe(
+  statements,
+  A.chain((a) => a.patterns),
+  A.foldMap(record.getMonoid(A.getMonoid<domain.Pattern>()))((pattern) =>
+    record.singleton(pattern.language, [pattern])
+  )
 )

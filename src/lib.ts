@@ -1,3 +1,5 @@
+import { io as IO } from "fp-ts"
+import { Endomorphism, Lazy, tuple } from "fp-ts/lib/function"
 import * as React from "react"
 
 export type HTMLProps = {
@@ -38,4 +40,20 @@ export function capitalize(s: string) {
 
 export function lowercase(s: string) {
   return s.toLowerCase()
+}
+
+export type FunctionalStateSet<A> = (f: Endomorphism<A>) => IO.IO<void>
+export type FunctionalState<A> = [A, FunctionalStateSet<A>]
+
+export function useFunctionalState<A>(lazy: Lazy<A>): FunctionalState<A> {
+  const [state, stateSet] = React.useState(lazy)
+
+  const stateSetExternal: FunctionalStateSet<A> = React.useCallback(
+    (endomorphism) => () => {
+      stateSet(endomorphism)
+    },
+    [state, stateSet]
+  )
+
+  return tuple(state, stateSetExternal)
 }
