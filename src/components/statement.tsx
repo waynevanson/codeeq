@@ -7,48 +7,74 @@ import * as lib from "../lib"
 import { CodeBlock } from "./code-block"
 import { LanguageSelector } from "./language-selector"
 
-// export const Pattern = ({
-//   patternsByLanguage,
-// }: {
-//   patternsByLanguage: Record<string, Array<domain.Pattern>>
-// }) =>
-//   pipe(
-//     patternsByLanguage,
-//     RC.collect((language, patterns) =>
-//       pipe(
-//         patterns,
-//         A.map(({ code }) => (
-//           <CodeBlock
-//             className="rounded-b-md"
-//             key={language + code}
-//             /* only display code block if selected */
-//             style={pipe(
-//               oTabIndex,
-//               O.chain(O.fromPredicate((tabIndex) => index === tabIndex)),
-//               O.map(() => ({ visibility: "hidden", position: "absolute" })),
-//               O.getOrElseW(() => ({}))
-//             )}
-//             code={code}
-//             language={language}
-//           />
-//         ))
-//       )
-//     ),
-//     A.flatten
-//   )
+export interface PatternsMiniProps {
+  patternsByLanguage: Record<string, Array<domain.Pattern>>
+  languageSelected: string
+}
 
-export const Statement: React.FC<
-  lib.HTMLProps &
-    domain.Statement & {
-      languagesChosen: lib.UseState<O.Option<Array<string>>>
-      languageSelected: lib.UseState<string>
-    }
-> = ({
+export interface PatternMiniProps extends domain.Pattern {
+  languageSelected: string
+}
+
+export const PatternMini: React.FC<PatternMiniProps> = ({
+  code,
+  language,
+  languageSelected,
+}) => (
+  <Grid item>
+    <CodeBlock
+      className="rounded-b-md "
+      key={language + code}
+      /* only display code block if selected */
+      style={pipe(
+        language,
+        O.fromPredicate((language) => language !== languageSelected),
+        O.map(
+          (): React.CSSProperties => ({
+            visibility: "hidden",
+            position: "absolute",
+          })
+        ),
+        O.getOrElseW(() => ({ marginTop: "1rem" }))
+      )}
+      code={code}
+      language={language}
+    />
+  </Grid>
+)
+
+export const PatternsMini: React.FC<PatternsMiniProps> = ({
+  patternsByLanguage,
+  languageSelected,
+}) => (
+  <Grid container>
+    {pipe(
+      patternsByLanguage,
+      RC.collect((_, patterns) =>
+        pipe(
+          patterns,
+          A.map((pattern) => (
+            <PatternMini languageSelected={languageSelected} {...pattern} />
+          ))
+        )
+      )
+    )}
+  </Grid>
+)
+
+// todo - rename props
+export interface StatementProps extends lib.HTMLProps, domain.Statement {
+  languagesChosen: lib.UseState<O.Option<Array<string>>>
+  languageSelected: lib.UseState<string>
+}
+
+export const Statement: React.FC<StatementProps> = ({
   patterns,
   style,
   className,
   description,
   name,
+
   languageSelected,
   // languagesChosen: [languages, languagesSet],
 }) => {
@@ -90,38 +116,10 @@ export const Statement: React.FC<
         languages={languagesUnique}
         stateLanguageSelected={languageSelected}
       />
-      {pipe(
-        patternsByLanguage,
-        RC.collect((language, patterns) =>
-          pipe(
-            patterns,
-            A.map(({ code }) => (
-              <Grid item>
-                <CodeBlock
-                  className="rounded-b-md"
-                  key={language + code}
-                  /* only display code block if selected */
-                  style={pipe(
-                    language,
-                    O.fromPredicate(
-                      (language) => language !== languageSelected[0]
-                    ),
-                    O.map(
-                      (): React.CSSProperties => ({
-                        visibility: "hidden",
-                        position: "absolute",
-                      })
-                    ),
-                    O.getOrElseW(() => ({ marginTop: "1rem" }))
-                  )}
-                  code={code}
-                  language={language}
-                />
-              </Grid>
-            ))
-          )
-        )
-      )}
+      <PatternsMini
+        patternsByLanguage={patternsByLanguage}
+        languageSelected={languageSelected[0]}
+      />
     </Card>
   )
 }
