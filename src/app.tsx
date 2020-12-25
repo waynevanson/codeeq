@@ -10,44 +10,14 @@ import { Home } from "./pages/home"
 import { Statement } from "./pages/statement"
 import { Statements } from "./pages/statements"
 
-export function useStateLocalStorage<A>(
-  key: string,
-  defaultValue: A,
-  decoder: d.Decoder<string, A>
-) {
-  return lib.useFunctionalState(
-    pipe(
-      ls.getItem(key),
-      IO.map(O.chain(flow(decoder.decode, O.fromEither))),
-      IO.chain(
-        flow(
-          O.fold(
-            () =>
-              pipe(
-                either.stringifyJSON(defaultValue, (e) => e),
-                either.fold(
-                  () => C.error(`failed to stringify "${defaultValue}"`),
-                  (defaultValueString) =>
-                    pipe(ls.setItem(key, defaultValueString))
-                ),
-                IO.map(() => defaultValue)
-              ),
-            IO.of
-          )
-        )
-      )
-    )
-  )
-}
-
 export const App: React.FC = () => {
-  const stateLanguageSelected = useStateLocalStorage(
+  const stateLanguageSelected = lib.useStateLocalStorage(
     "languageSelected",
     "javascript",
     d.string
   )
 
-  const stateLanguagesChosen = useStateLocalStorage(
+  const stateLanguagesChosen = lib.useStateLocalStorage(
     "languagesChosen",
     ["javascript"],
     d.array(d.string)
