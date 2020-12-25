@@ -1,7 +1,7 @@
 import { console as C, either, io as IO, option as O } from "fp-ts"
 import * as ls from "fp-ts-local-storage"
-import { pipe } from "fp-ts/lib/function"
-import * as t from "io-ts"
+import { flow, pipe } from "fp-ts/lib/function"
+import * as d from "io-ts/Decoder"
 import * as React from "react"
 import { BrowserRouter, Route, Switch } from "react-router-dom"
 import { PageTemplate } from "./components/page-template"
@@ -24,26 +24,48 @@ export const localStorageGetOrElse = (key: string, defaultValue: string) =>
     )
   )
 
-export const getLanguageSelected = localStorageGetOrElse(
-  "languageSelected",
-  "javascript"
-)
-
-export const getLanguagesChosen = pipe(
-  localStorageGetOrElse("languagesChosen", JSON.stringify(["javascript"])),
-  IO.map((a) =>
+export function useStateLocalStorage<A>(
+  key: string,
+  defaultValue: A,
+  decoder: d.Decoder<string, A>
+) {
+  return React.useState(
     pipe(
-      either.parseJSON(a, (e) => e as TypeError),
-      either.chainW(t.array(t.string).decode)
+      ls.getItem(key),
+      IO.map(O.chain(flow(decoder.decode, O.fromEither))),
+      IO.chain(
+        flow(
+          O.fold(
+            () =>
+              pipe(
+                either.stringifyJSON(defaultValue, (e) => e),
+                either.fold(
+                  () => C.error(`failed to stringify "${defaultValue}"`),
+                  (defaultValueString) =>
+                    pipe(ls.setItem(key, defaultValueString))
+                ),
+                IO.map(() => defaultValue)
+              ),
+            IO.of
+          )
+        )
+      )
     )
-  ),
-  IO.chainFirst(either.fold(C.error, IO.of)),
-  IO.map(O.fromEither)
-)
+  )
+}
 
 export const App: React.FC = () => {
-  const languageSelected = React.useState(getLanguageSelected)
-  const languagesChosen = React.useState(getLanguagesChosen)
+  const languageSelected = useStateLocalStorage(
+    "languageSelected",
+    "javascript",
+    d.string
+  )
+
+  const languagesChosen = useStateLocalStorage(
+    "languagesChosen",
+    ["javascript"],
+    d.array(d.string)
+  )
 
   return (
     <BrowserRouter>

@@ -1,5 +1,5 @@
 import { Grid } from "@material-ui/core"
-import { array as A, option as O, readonlyRecord as RC } from "fp-ts"
+import { array as A, readonlyRecord as RC } from "fp-ts"
 import { pipe } from "fp-ts/lib/function"
 import * as React from "react"
 import { LanguageSwitches } from "../components/language-switches"
@@ -15,7 +15,7 @@ export const availableLanguagesRecord = pipe(
 )
 
 export interface StatementsProps {
-  languagesChosen: lib.UseState<O.Option<Array<string>>>
+  languagesChosen: lib.UseState<Array<string>>
   languageSelected: lib.UseState<string>
 }
 
