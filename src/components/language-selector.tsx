@@ -13,44 +13,21 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   stateLanguageSelected: [languageSelected, languageSelectedSet],
   languages,
 }) => {
-  const [oTabIndex, oTabIndexSet] = React.useState<number | false>(false)
-
-  function handleTabChange(newIndex: number) {
-    // change internal state
-    oTabIndexSet(() => newIndex)
-    // change language by looking up languages
-    pipe(
-      languages,
-      A.lookup(newIndex),
-      O.fold(
-        () => () => console.log(`newIndex "${newIndex}" is not in the list`),
-        (language) => () => languageSelectedSet(language)
-      )
-    )()
-  }
-
-  // change ther tab index when the language changes
-  React.useEffect(() => {
-    pipe(
-      languages,
-      A.findIndex((a) => a === languageSelected),
-      io.of,
-      io.map(O.getOrElseW((): false => false)),
-      io.chainFirst((oindex) => () => oTabIndexSet(oindex))
-    )()
-  }, [languages, languageSelected])
-
   return (
     <Tabs
-      value={oTabIndex}
+      value={languageSelected}
       indicatorColor="primary"
       textColor="primary"
-      onChange={(e, index) => handleTabChange(index)}
+      onChange={(e, newLanguageSelected) =>
+        languageSelectedSet(() => newLanguageSelected)
+      }
       aria-label="language buttons"
     >
       {pipe(
         languages,
-        A.map((language) => <Tab key={language} label={language} />)
+        A.map((language) => (
+          <Tab value={language} key={language} label={language} />
+        ))
       )}
     </Tabs>
   )
