@@ -55,5 +55,5 @@ export function useFunctionalState<A>(lazy: Lazy<A>): FunctionalState<A> {
     [state, stateSet]
   )
 
-  return tuple(state, stateSetExternal)
+  return [state, stateSetExternal]
 }
