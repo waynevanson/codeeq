@@ -15,14 +15,14 @@ export const availableLanguagesRecord = pipe(
 )
 
 export interface StatementsProps {
-  languagesChosen: lib.UseState<Array<string>>
-  languageSelected: lib.UseState<string>
+  stateLanguagesChosen: lib.UseFunctionalState<Array<string>>
+  stateLanguageSelected: lib.UseFunctionalState<string>
 }
 
 export const Statements: React.FC<StatementsProps> = (props) => {
   lib.useTitle("Statements")
 
-  const stateCheckboxes = React.useState(() => availableLanguagesRecord)
+  const stateCheckboxes = lib.useFunctionalState(() => availableLanguagesRecord)
 
   return (
     <>

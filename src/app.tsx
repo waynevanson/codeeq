@@ -5,6 +5,7 @@ import * as d from "io-ts/Decoder"
 import * as React from "react"
 import { BrowserRouter, Route, Switch } from "react-router-dom"
 import { PageTemplate } from "./components/page-template"
+import * as lib from "./lib"
 import { Home } from "./pages/home"
 import { Statement } from "./pages/statement"
 import { Statements } from "./pages/statements"
@@ -29,7 +30,7 @@ export function useStateLocalStorage<A>(
   defaultValue: A,
   decoder: d.Decoder<string, A>
 ) {
-  return React.useState(
+  return lib.useFunctionalState(
     pipe(
       ls.getItem(key),
       IO.map(O.chain(flow(decoder.decode, O.fromEither))),
@@ -55,13 +56,13 @@ export function useStateLocalStorage<A>(
 }
 
 export const App: React.FC = () => {
-  const languageSelected = useStateLocalStorage(
+  const stateLanguageSelected = useStateLocalStorage(
     "languageSelected",
     "javascript",
     d.string
   )
 
-  const languagesChosen = useStateLocalStorage(
+  const stateLanguagesChosen = useStateLocalStorage(
     "languagesChosen",
     ["javascript"],
     d.array(d.string)
@@ -75,7 +76,9 @@ export const App: React.FC = () => {
           <Route
             path="/statements"
             exact
-            render={() => Statements({ languagesChosen, languageSelected })}
+            render={() =>
+              Statements({ stateLanguagesChosen, stateLanguageSelected })
+            }
           />
           <Route path="/statements/:statement" component={Statement} />
         </Switch>

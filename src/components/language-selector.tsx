@@ -6,7 +6,7 @@ import * as lib from "../lib"
 
 export interface LanguageSelectorProps {
   languages: Array<string>
-  stateLanguageSelected: lib.UseState<string>
+  stateLanguageSelected: lib.UseFunctionalState<string>
 }
 
 export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
@@ -23,7 +23,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
       indicatorColor="primary"
       textColor="primary"
       onChange={(e, newLanguageSelected) =>
-        languageSelectedSet(() => newLanguageSelected)
+        languageSelectedSet(() => newLanguageSelected)()
       }
       aria-label="language buttons"
     >

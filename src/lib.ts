@@ -42,13 +42,13 @@ export function lowercase(s: string) {
   return s.toLowerCase()
 }
 
-export type FunctionalStateSet<A> = (f: Endomorphism<A>) => IO.IO<void>
-export type FunctionalState<A> = [A, FunctionalStateSet<A>]
+export type UseFunctionalStateSet<A> = (f: Endomorphism<A>) => IO.IO<void>
+export type UseFunctionalState<A> = [A, UseFunctionalStateSet<A>]
 
-export function useFunctionalState<A>(lazy: Lazy<A>): FunctionalState<A> {
+export function useFunctionalState<A>(lazy: Lazy<A>): UseFunctionalState<A> {
   const [state, stateSet] = React.useState(lazy)
 
-  const stateSetExternal: FunctionalStateSet<A> = React.useCallback(
+  const stateSetExternal: UseFunctionalStateSet<A> = React.useCallback(
     (endomorphism) => () => {
       stateSet(endomorphism)
     },

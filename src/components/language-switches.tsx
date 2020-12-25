@@ -5,7 +5,7 @@ import * as React from "react"
 import * as lib from "../lib"
 
 export interface LanguageSwitchesProps {
-  stateCheckboxes: lib.UseState<RC.ReadonlyRecord<string, boolean>>
+  stateCheckboxes: lib.UseFunctionalState<RC.ReadonlyRecord<string, boolean>>
 }
 
 export const LanguageSwitches: React.FC<LanguageSwitchesProps> = ({
@@ -21,7 +21,7 @@ export const LanguageSwitches: React.FC<LanguageSwitchesProps> = ({
             <Switch
               checked={isChecked}
               onChange={(e) =>
-                checkboxesSet(RC.insertAt(language, e.target.checked))
+                checkboxesSet(RC.insertAt(language, e.target.checked))()
               }
             />
           }
