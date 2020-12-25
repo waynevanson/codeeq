@@ -14,7 +14,7 @@ export const PatternsMini: React.FC<PatternsMiniProps> = ({
   patternsByLanguage,
   languageSelected,
 }) => (
-  <Grid container>
+  <Grid container direction="column">
     {pipe(
       patternsByLanguage,
       RC.collect((_, patterns) =>
