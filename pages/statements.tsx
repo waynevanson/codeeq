@@ -29,15 +29,13 @@ export const Statements: React.FC<StatementsProps> = () => {
 
   const stateLanguagesChosen = lib.useStateLocalStorage(
     "languagesChosen",
-    () => ["javascript"],
-    d.array(d.string)
+    () => availableLanguagesRecord,
+    d.record(d.boolean)
   )
-
-  const stateCheckboxes = lib.useFunctionalState(() => availableLanguagesRecord)
 
   return (
     <>
-      <LanguageSwitches stateCheckboxes={stateCheckboxes} />
+      <LanguageSwitches stateCheckboxes={stateLanguagesChosen} />
       <Grid spacing={2} container>
         {pipe(
           data.statements,

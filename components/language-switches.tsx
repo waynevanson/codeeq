@@ -10,24 +10,26 @@ export interface LanguageSwitchesProps {
 
 export const LanguageSwitches: React.FC<LanguageSwitchesProps> = ({
   stateCheckboxes: [checkboxes, checkboxesSet],
-}) => (
-  <FormGroup row>
-    {pipe(
-      checkboxes,
-      RC.collect((language, isChecked) => (
-        <FormControlLabel
-          key={language}
-          label={pipe(language, lib.lowercase, lib.capitalize)}
-          control={
-            <Switch
-              checked={isChecked}
-              onChange={(e) =>
-                checkboxesSet(RC.insertAt(language, e.target.checked))()
-              }
-            />
-          }
-        />
-      ))
-    )}
-  </FormGroup>
-)
+}) => {
+  return (
+    <FormGroup row>
+      {pipe(
+        checkboxes,
+        RC.collect((language, isChecked) => (
+          <FormControlLabel
+            key={language}
+            label={pipe(language, lib.lowercase, lib.capitalize)}
+            control={
+              <Switch
+                checked={isChecked}
+                onChange={(e) =>
+                  checkboxesSet(RC.insertAt(language, e.target.checked))()
+                }
+              />
+            }
+          />
+        ))
+      )}
+    </FormGroup>
+  )
+}

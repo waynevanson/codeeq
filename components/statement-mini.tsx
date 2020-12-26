@@ -10,7 +10,7 @@ import { PatternsMini } from "./patterns-mini"
 // todo - rename props
 // props are backwards lol
 export interface StatementMiniProps extends lib.HTMLProps, domain.Statement {
-  stateLanguagesChosen: lib.UseFunctionalState<Array<string>>
+  stateLanguagesChosen: lib.UseFunctionalState<Record<string, boolean>>
   stateLanguageSelected: lib.UseFunctionalState<string>
 }
 
@@ -21,7 +21,7 @@ export const StatementMini: React.FC<StatementMiniProps> = ({
   description,
   name,
   stateLanguageSelected,
-  // languagesChosen: [languages, languagesSet],
+  stateLanguagesChosen,
 }) => {
   // todo - when times multiple selected patterns share a language,
   // make it match
@@ -60,6 +60,7 @@ export const StatementMini: React.FC<StatementMiniProps> = ({
       <LanguageSelector
         languages={languagesUnique}
         stateLanguageSelected={stateLanguageSelected}
+        stateLanguagesChosen={stateLanguagesChosen}
       />
       <PatternsMini
         patternsByLanguage={patternsByLanguage}
