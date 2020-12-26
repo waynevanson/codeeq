@@ -2,7 +2,7 @@ import { Grid } from "@material-ui/core"
 import { array as A, record as RC } from "fp-ts"
 import { pipe } from "fp-ts/lib/function"
 import * as React from "react"
-import * as domain from "../domain/"
+import * as domain from "../domain"
 import { PatternMini } from "./pattern-mini"
 
 export interface PatternsMiniProps {

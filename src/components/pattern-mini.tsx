@@ -2,7 +2,7 @@ import { Grid } from "@material-ui/core"
 import { option as O } from "fp-ts"
 import { pipe } from "fp-ts/lib/function"
 import * as React from "react"
-import * as domain from "../domain/"
+import * as domain from "../domain"
 import { CodeBlock } from "./code-block"
 
 export interface PatternMiniProps extends domain.Pattern {
