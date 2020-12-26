@@ -1,5 +1,10 @@
-import { Tab, Tabs } from "@material-ui/core"
-import { array as A, either as E, option as O, record as RC } from "fp-ts"
+import { Divider, Tab, Tabs } from "@material-ui/core"
+import {
+  array as A,
+  either as E,
+  option as O,
+  readonlyRecord as RC,
+} from "fp-ts"
 import { identity, pipe } from "fp-ts/lib/function"
 import * as React from "react"
 import * as lib from "../lib"
@@ -9,6 +14,10 @@ export interface LanguageSelectorProps {
   stateLanguagesChosen: lib.UseFunctionalState<Record<string, boolean>>
   stateLanguageSelected: lib.UseFunctionalState<string>
 }
+
+const LanguageTab = (language: string) => (
+  <Tab value={language} key={language} label={language} />
+)
 
 export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   stateLanguageSelected: [languageSelected, languageSelectedSet],
@@ -40,13 +49,12 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
             E.map(() => language)
           )
         ),
-        ({ right }) =>
-          pipe(
-            right,
-            A.map((language) => (
-              <Tab value={language} key={language} label={language} />
-            ))
-          )
+        RC.map(A.map(LanguageTab)),
+        ({ left, right }) => [
+          ...right,
+          <Divider orientation="vertical" flexItem />,
+          ...left,
+        ]
       )}
     </Tabs>
   )
