@@ -8,9 +8,8 @@ import { LanguageSelector } from "./language-selector"
 import { PatternsMini } from "./patterns-mini"
 
 const useStyle = makeStyles((theme) => ({
-  roundit: {
-    paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1),
+  namedesc: {
+    padding: theme.spacing(0, 2),
   },
 }))
 
@@ -59,7 +58,7 @@ export const StatementMini: React.FC<StatementMiniProps> = ({
 
   return (
     <Card style={style} className={className}>
-      <div className={classes.roundit}>
+      <div className={classes.namedesc}>
         <Typography variant="h4">{name}</Typography>
         <Typography variant="body1">{description}</Typography>
       </div>

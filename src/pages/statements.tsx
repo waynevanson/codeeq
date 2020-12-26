@@ -1,4 +1,4 @@
-import { Grid } from "@material-ui/core"
+import { Grid, makeStyles } from "@material-ui/core"
 import { array as A, readonlyRecord as RC } from "fp-ts"
 import { pipe } from "fp-ts/lib/function"
 import { NextPageContext } from "next"
@@ -15,6 +15,9 @@ export const availableLanguagesRecord = pipe(
     pipe(b, RC.insertAt(a, false))
   )
 )
+const useStyles = makeStyles((theme) => ({
+  languageSwitches: { margin: theme.spacing(0, 0, 2, 0) },
+}))
 
 export interface StatementsProps extends NextPageContext {}
 
@@ -33,9 +36,14 @@ export const Statements: React.FC<StatementsProps> = () => {
     d.record(d.boolean)
   )
 
+  const classes = useStyles()
+
   return (
     <>
-      <LanguageSwitches stateCheckboxes={stateLanguagesChosen} />
+      <LanguageSwitches
+        className={classes.languageSwitches}
+        stateCheckboxes={stateLanguagesChosen}
+      />
       <Grid spacing={2} container>
         {pipe(
           data.statements,

@@ -1,4 +1,5 @@
-import { Divider, Tab, Tabs } from "@material-ui/core"
+import { makeStyles, Tab, Tabs } from "@material-ui/core"
+import clsx from "clsx"
 import {
   array as A,
   either as E,
@@ -9,23 +10,29 @@ import { identity, pipe } from "fp-ts/lib/function"
 import * as React from "react"
 import * as lib from "../lib"
 
+const useStyles = makeStyles((theme) => ({
+  divider: { padding: theme.spacing(0.3), margin: "0.2rem 0.5rem" },
+  selectedTab: { fontWeight: "bold" },
+  deselectedTab: { fontWeight: "normal" },
+}))
+
 export interface LanguageSelectorProps {
   languages: Array<string>
   stateLanguagesChosen: lib.UseFunctionalState<Record<string, boolean>>
   stateLanguageSelected: lib.UseFunctionalState<string>
+  className?: string
 }
-
-const LanguageTab = (language: string) => (
-  <Tab value={language} key={language} label={language} />
-)
 
 export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   stateLanguageSelected: [languageSelected, languageSelectedSet],
   stateLanguagesChosen: [languagesChosen],
   languages,
+  className,
 }) => {
+  const classes = useStyles()
   return (
     <Tabs
+      className={clsx(className)}
       value={pipe(
         languages,
         A.findFirst((l: string) => l === languageSelected),
@@ -49,12 +56,31 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
             E.map(() => language)
           )
         ),
-        RC.map(A.map(LanguageTab)),
-        ({ left, right }) => [
-          ...right,
-          <Divider orientation="vertical" flexItem />,
-          ...left,
-        ]
+        ({ left, right }) =>
+          pipe(
+            right,
+            A.map((language) => (
+              <Tab
+                key={language}
+                className={classes.selectedTab}
+                value={language}
+                label={language}
+              />
+            )),
+            A.alt(() =>
+              pipe(
+                left,
+                A.map((language) => (
+                  <Tab
+                    key={language}
+                    className={classes.deselectedTab}
+                    value={language}
+                    label={language}
+                  />
+                ))
+              )
+            )
+          )
       )}
     </Tabs>
   )
