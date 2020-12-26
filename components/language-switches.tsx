@@ -16,6 +16,7 @@ export const LanguageSwitches: React.FC<LanguageSwitchesProps> = ({
       checkboxes,
       RC.collect((language, isChecked) => (
         <FormControlLabel
+          key={language}
           label={pipe(language, lib.lowercase, lib.capitalize)}
           control={
             <Switch
