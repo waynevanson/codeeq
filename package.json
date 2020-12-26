@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "start": "parcel serve ./public/index.html",
-    "build": "PARCEL_BUNDLE_ANALYZER=1  parcel build ./public/index.html"
+    "start": "next dev",
+    "build": "next build"
   },
   "devDependencies": {
     "@octokit/core": "^3.2.4",
