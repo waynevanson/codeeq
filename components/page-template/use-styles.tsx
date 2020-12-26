@@ -42,7 +42,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       ...theme.mixins.toolbar,
       justifyContent: "flex-end",
     },
-    content: {
+    main: {
       flexGrow: 1,
       padding: theme.spacing(3),
       transition: theme.transitions.create("margin", {
@@ -50,6 +50,7 @@ export const useStyles = makeStyles((theme: Theme) =>
         duration: theme.transitions.duration.leavingScreen,
       }),
       marginLeft: -drawerWidth,
+      backgroundColor: theme.palette.background.default,
     },
     contentShift: {
       transition: theme.transitions.create("margin", {

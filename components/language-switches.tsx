@@ -21,6 +21,7 @@ export const LanguageSwitches: React.FC<LanguageSwitchesProps> = ({
             label={pipe(language, lib.lowercase, lib.capitalize)}
             control={
               <Switch
+                color="primary"
                 checked={isChecked}
                 onChange={(e) =>
                   checkboxesSet(RC.insertAt(language, e.target.checked))()

@@ -15,7 +15,7 @@ export const PageTemplate: React.FC = ({ children }) => {
       <TopBar {...props} />
       <NavDrawer {...props} />
       <main
-        className={clsx(classes.content, {
+        className={clsx(classes.main, {
           [classes.contentShift]: open,
         })}
       >
