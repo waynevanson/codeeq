@@ -1,4 +1,4 @@
-import { Card, Typography } from "@material-ui/core"
+import { Card, makeStyles, Typography } from "@material-ui/core"
 import { array as A, eq, ord, record as RC } from "fp-ts"
 import { pipe } from "fp-ts/lib/function"
 import * as React from "react"
@@ -7,8 +7,13 @@ import * as lib from "../lib"
 import { LanguageSelector } from "./language-selector"
 import { PatternsMini } from "./patterns-mini"
 
-// todo - rename props
-// props are backwards lol
+const useStyle = makeStyles((theme) => ({
+  roundit: {
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+  },
+}))
+
 export interface StatementMiniProps extends lib.HTMLProps, domain.Statement {
   stateLanguagesChosen: lib.UseFunctionalState<Record<string, boolean>>
   stateLanguageSelected: lib.UseFunctionalState<string>
@@ -50,9 +55,11 @@ export const StatementMini: React.FC<StatementMiniProps> = ({
     [patternsByLanguage]
   )
 
+  const classes = useStyle()
+
   return (
     <Card style={style} className={className}>
-      <div className="px-2">
+      <div className={classes.roundit}>
         <Typography variant="h4">{name}</Typography>
         <Typography variant="body1">{description}</Typography>
       </div>
